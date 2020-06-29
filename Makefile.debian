@@ -50,10 +50,17 @@ PACKAGE_LIST = $(DEBIAN_BUILD_DIRS)
 DIST_BUILD_DIR = /home/user
 
 ifneq (1,$(NO_ARCHIVE))
-  ifeq ($(shell cat $(ORIG_SRC)/$(DEBIAN_BUILD_DIRS)/source/format 2>/dev/null),3.0 (quilt))
-    GIT_TARBALL_NAME ?= $(DEBIAN_BUILD_DIRS)/../../$(shell $(DEBIAN_PARSER) changelog --package-release-name $(ORIG_SRC)/$(DEBIAN_BUILD_DIRS)/changelog 2>/dev/null).orig.tar.xz
-  endif
+SOURCE_COPY_IN := source-debian-copy-in source-debian-quilt-copy-in
+
+source-debian-copy-in: VERSION = $(shell cat $(ORIG_SRC)/version)
+source-debian-copy-in: SRC_FILE  = $(ORIG_SRC)/pkgs/src/$(NAME)-$(VERSION).tar.gz
+source-debian-copy-in: ORIG_FILE = $(CHROOT_DIR)/$(DIST_SRC)/../$(shell $(DEBIAN_PARSER) changelog --package-release-name $(ORIG_SRC)/$(DEBIAN_BUILD_DIRS)/changelog 2>/dev/null).orig.tar.gz
+source-debian-copy-in:
+	cp -p $(SRC_FILE) $(ORIG_FILE)
 endif
+
+source-debian-quilt-copy-in:
+	$(shell [ -e $(ORIG_SRC)/series-debian-vm.conf ] && $(ORIG_SRC)/debian-quilt $(ORIG_SRC)/series-debian-vm.conf $(CHROOT_DIR)/$(DIST_SRC)/debian/patches)
 
 ### Variables determined by package's Makefile.builder
 DIST_SRC_DEBIAN_DIR = $(DIST_SRC)/$(DEBIAN_BUILD_DIRS)
