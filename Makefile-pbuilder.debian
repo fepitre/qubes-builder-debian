@@ -79,3 +79,6 @@ dist-copy-out:
 	mkdir -p $(ORIG_SRC)/$(OUTPUT_DIR)
 	dcmd cp -t $(BUILDER_REPO_DIR)/deb $(PBUILDER_BASEDIR)/results/$(release_name)*.changes
 	dcmd mv -t $(PWD)/$(ORIG_SRC)/$(OUTPUT_DIR) $(PBUILDER_BASEDIR)/results/$(release_name)*.changes
+	if [ "0$(GENERATE_INTOTO_METADATA)" -eq 1 ]; then\
+		cd $(PWD)/$(ORIG_SRC)/$(OUTPUT_DIR) && dcmd --deb -- $(INTOTO_RUN) $(release_name)*.changes; \
+	fi

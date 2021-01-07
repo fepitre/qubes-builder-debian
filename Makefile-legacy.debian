@@ -67,3 +67,6 @@ dist-copy-out:
 	cd $(CHROOT_DEBIAN_DIR)/../..; \
 		mv -t $(PWD)/$(ORIG_SRC)/$(OUTPUT_DIR)  `$(listfiles) $(release_name)*.changes`
 	mv -t $(PWD)/$(ORIG_SRC)/$(OUTPUT_DIR) $(CHROOT_DEBIAN_DIR)/../../$(release_name)*.changes
+	if [ "0$(GENERATE_INTOTO_METADATA)" -eq 1 ]; then\
+		cd $(PWD)/$(ORIG_SRC)/$(OUTPUT_DIR) && dcmd --deb -- $(INTOTO_RUN) $(release_name)*.changes; \
+	fi

@@ -128,6 +128,8 @@ ifeq (1,$(INCREMENT_DEVEL_VERSIONS))
 EXTRA_REPREPRO_OPTS += -T deb
 endif
 
+INTOTO_RUN := /usr/local/bin/in-toto-run --verbose --step-name=rebuild --gpg $(SIGN_KEY) --no-command --products
+
 ifeq ($(DEBUG),1)
   $(info ╔══ DEBUG ══════════════════════════════════════════════════════════════════════)
   $(info ║ Repo Variables)
@@ -287,6 +289,4 @@ sign:
 		debsign $(DEBSIGN_ARGS) --no-re-sign \
 			$(BUILDER_REPO_DIR)/deb/$(release_name_full)+$(DIST_TAG)u1_amd64.changes; \
 	fi
-		
-
 endif
