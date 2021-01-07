@@ -128,7 +128,12 @@ ifeq (1,$(INCREMENT_DEVEL_VERSIONS))
 EXTRA_REPREPRO_OPTS += -T deb
 endif
 
+ifeq (1,$(GENERATE_INTOTO_METADATA))
+ifeq (40,$(shell echo $(SIGN_KEY) | awk '{print length($0)}'))
+SIGN_KEY_SHORT = $(shell echo $(SIGN_KEY) | awk '{print tolower(substr($$0,1,8))}')
 INTOTO_RUN := /usr/local/bin/in-toto-run --verbose --step-name=rebuild --gpg $(SIGN_KEY) --no-command --products
+endif
+endif
 
 ifeq ($(DEBUG),1)
   $(info ╔══ DEBUG ══════════════════════════════════════════════════════════════════════)
