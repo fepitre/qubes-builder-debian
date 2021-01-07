@@ -72,7 +72,8 @@ endif
 		$(CHROOT_DIR)/$(DIST_SRC)/$(PACKAGE)/../../$$release_name_full.dsc
 
 ifneq (,$(DEBIAN_BUILD_DIRS))
-dist-copy-out:  release_name = $(shell $(DEBIAN_PARSER) changelog --package-release-name $(CHROOT_DEBIAN_DIR)/changelog)
+dist-copy-out: release_name = $(shell $(DEBIAN_PARSER) changelog --package-release-name $(CHROOT_DEBIAN_DIR)/changelog)
+dist-copy-out: release_name_full = $(shell $(DEBIAN_PARSER) changelog --package-release-name-full $(ORIG_SRC)/$(DEBIAN_BUILD_DIRS)/changelog)
 endif
 dist-copy-out:
 	mkdir -p $(BUILDER_REPO_DIR)/deb
@@ -81,5 +82,5 @@ dist-copy-out:
 	dcmd mv -t $(PWD)/$(ORIG_SRC)/$(OUTPUT_DIR) $(PBUILDER_BASEDIR)/results/$(release_name)*.changes
 	if [ "0$(GENERATE_INTOTO_METADATA)" -eq 1 -a -n "$(INTOTO_RUN)" -a -n "$(SIGN_KEY_SHORT)" ]; then \
 		cd $(PWD)/$(ORIG_SRC)/$(OUTPUT_DIR) && dcmd --deb -- $(INTOTO_RUN) $(release_name)*.changes; \
-		mv rebuild.$(SIGN_KEY_SHORT).link $(release_name)_rebuild.$(SIGN_KEY_SHORT).link; \
+		mv rebuild.$(SIGN_KEY_SHORT).link $(release_name_full)_rebuild.$(SIGN_KEY_SHORT).link; \
 	fi
