@@ -38,6 +38,14 @@ bootstrap() {
             "${INSTALLDIR}/var/lib/apt/lists/debootstrap.invalid_dists_${DIST}_Release" \
         )
 
+        # prepare in-toto
+        mkdir -p "${INSTALLDIR}/var/lib/intoto/gnupg"
+        chmod 700 "${INSTALLDIR}/var/lib/intoto/gnupg"
+        GNUPGHOME="${INSTALLDIR}/var/lib/intoto/gnupg" gpg --import \
+          "${SCRIPTSDIR}/../in-toto/keys/9FA64B92F95E706BF28E2CA6484010B5CDC576E2.asc" \
+          "${SCRIPTSDIR}/../in-toto/keys/8DEB0BEF1D99FEB8B9A90FB192EF6D6141641E5C.asc"
+        cp "${SCRIPTSDIR}/../in-toto/root.layout" "${INSTALLDIR}/var/lib/intoto/"
+
         apt_https_pkgs="apt-transport-https,ca-certificates"
         # Download packages first, and log hash of them _before_ installing
         # them. Needs to copy Release{,.gpg} to a dummy _local_ repo, because
@@ -51,6 +59,12 @@ bootstrap() {
             --keyring="${SCRIPTSDIR}/../keys/${DIST}-${DISTRIBUTION}-archive-keyring.gpg" \
             "${DIST}" "${INSTALLDIR}" "${mirror}" && \
         sha256sum "${INSTALLDIR}/var/cache/apt/archives"/*.deb && \
+        "${SCRIPTSDIR}"/../in-toto/in-toto-verify.py \
+            --gnupghome "${INSTALLDIR}/var/lib/intoto/gnupg" \
+            --root-layout "${INSTALLDIR}/var/lib/intoto/root.layout" \
+            --sign-key-root-layout 9fa64b92f95e706bf28e2ca6484010b5cdc576e2 \
+            --rebuilder "https://rebuild.notset.fr/debian" \
+            --packages "${INSTALLDIR}/var/cache/apt/archives"/*.deb && \
         for release_location in "${release_location_candidates[@]}"; do
             if [ -r "${release_location}" ]; then
                 cp "${release_location}" \
