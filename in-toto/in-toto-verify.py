@@ -36,8 +36,8 @@ def in_toto_verify(config, filename):
             pkg_name = pkg_name_parts[0]
             pkg_version_release = pkg_name_parts[1]
     if not (pkg_name and pkg_version_release):
-        logger.info(f"Skipping in-toto verification for '{filename}'")
-        return True
+        logger.error(f"Cannot parse '{filename}'")
+        return False
 
     logger.info(f"Prepare in-toto verification for '{filename}'")
 
