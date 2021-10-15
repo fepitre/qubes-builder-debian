@@ -58,6 +58,7 @@ bootstrap() {
             --download-only \
             --keyring="${SCRIPTSDIR}/../keys/${DIST}-${DISTRIBUTION}-archive-keyring.gpg" \
             "${DIST}" "${INSTALLDIR}" "${mirror}" && \
+        dpkg-name -o "${INSTALLDIR}/var/cache/apt/archives"/*.deb && \
         sha256sum "${INSTALLDIR}/var/cache/apt/archives"/*.deb && \
         "${SCRIPTSDIR}"/../in-toto/in-toto-verify.py \
             --gnupghome "${INSTALLDIR}/var/lib/intoto/gnupg" \
