@@ -1,5 +1,5 @@
-gnome-terminal.desktop
-firefox.desktop
+org.gnome.Terminal.desktop
+org.gnome.Nautilus.desktop
+firefox-esr.desktop
 thunderbird.desktop
-nautilus.desktop
 yelp.desktop
