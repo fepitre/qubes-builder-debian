@@ -447,7 +447,7 @@ function setDefaultApplications() {
 # Install Qubes Repo
 # ==============================================================================
 installQubesRepo() {
-    info " Defining Qubes CUSTOMREPO Location: ${PACKAGES_DIR}"
+    info "Defining Qubes CUSTOMREPO Location: ${PACKAGES_DIR}"
     export CUSTOMREPO="${PACKAGES_DIR}"
 
     info "Mounting local qubes_repo"
@@ -476,9 +476,22 @@ EOF
 # Uninstall Qubes Repo
 # ==============================================================================
 uninstallQubesRepo() {
-    info ' Removing Qubes build repo from sources.list.d'
+    info "Removing Qubes build repo from sources.list.d"
 
     # Lets not umount; we do that anyway when 04 exits
     umount_kill "${INSTALL_DIR}/tmp/qubes_repo"
     rm -f "${INSTALL_DIR}/etc/apt/sources.list.d/qubes-builder.list"
+}
+
+
+# ==============================================================================
+# Install Mozilla/PPA Repo
+# ==============================================================================
+installMozillaRepo() {
+    cat > "${INSTALL_DIR}/etc/apt/sources.list.d/qubes-builder.list" <<EOF
+deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu ${DIST_CODENAME} main
+deb-src https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu ${DIST_CODENAME} main
+EOF
+
+  cp "${TEMPLATE_CONTENT_DIR}/../keys/launchpad-ppa-for-mozilla-team.gpg" "${INSTALL_DIR}/etc/apt/trusted.gpg.d/"
 }
