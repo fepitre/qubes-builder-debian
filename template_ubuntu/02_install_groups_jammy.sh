@@ -12,12 +12,6 @@ source "${TEMPLATE_CONTENT_DIR}/vars.sh"
 source "${TEMPLATE_CONTENT_DIR}/distribution.sh"
 
 #### '--------------------------------------------------------------------------
-info 'Add Mozilla PPA repository'
-#### '--------------------------------------------------------------------------
-aptInstall gnupg
-installMozillaRepo
-
-#### '--------------------------------------------------------------------------
 info 'Update sources.list'
 #### '--------------------------------------------------------------------------
 updateQubuntuSourceList
